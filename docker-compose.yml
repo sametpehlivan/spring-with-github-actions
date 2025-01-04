@@ -1,0 +1,58 @@
+#docker-compose -f docker-compose.yml --env-file .env up -d
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:5.0.13
+    container_name: mongodb
+    ports:
+      - $MONGO_EXPOSE_PORT:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+      MONGO_INITDB_DATABASE: $MONGO_DATABASE
+    volumes:
+      - $MONGO_VOLUME:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - microservices-net
+
+  mongo-express:
+    image:  mongo-express
+    container_name: mongo-express
+    ports:
+      - $MONGO_EXPRESS_EXPOSE_PORT:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: $MONGO_USERNAME
+      ME_CONFIG_MONGODB_ADMINPASSWORD: $MONGO_PASSWORD
+      ME_CONFIG_MONGODB_SERVER: $MONGO_DATABASE
+      ME_CONFIG_BASICAUTH: $MONGO_EXPRESS_BASIC_AUTH
+    restart: unless-stopped
+    networks:
+      - microservices-net
+
+  customer-api:
+    container_name: customer-service_container
+    image: customer-service/customer-service:1.0.0
+    ports:
+      - $CUSTOMER_SERVICE_EXPOSE_PORT:8080
+    environment:
+      MONGO_USERNAME: $MONGO_USERNAME
+      MONGO_PASSWORD: $MONGO_PASSWORD
+      MONGO_HOST: mongodb
+      MONGO_DATABASE: $MONGO_DATABASE
+      MONGO_AUTH_DATABASE: $MONGO_AUTH_DATABASE
+    networks:
+      - microservices-net
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+networks:
+  microservices-net:
+    driver: bridge
