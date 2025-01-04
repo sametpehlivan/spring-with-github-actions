@@ -25,7 +25,7 @@ jobs:
           distribution: 'corretto'
       - name: Compile project
         run: |
-          cd github-actions
+          cd spring-with-github-actions
           ./mvnw clean compile
   unit-tests:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
           distribution: 'corretto'
       - name: Running Unit Test
         run: |
-          cd github-actions
+          cd spring-with-github-actions
           ./mvnw clean test
 
   build:
@@ -61,7 +61,7 @@ jobs:
           distribution: 'corretto'
       - name: Build Project
         run: |
-          cd github-actions
+          cd spring-with-github-actions
           ./mvnw clean package
 
   
@@ -83,7 +83,7 @@ jobs:
       - name: Extract Project Version
         id: extract_version
         run: |
-          cd github-actions
+          cd spring-with-github-actions
           echo "VERSION=$(./mvnw -q -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
       - name: Login to Docker Hub
         uses: docker/login-action@v3
