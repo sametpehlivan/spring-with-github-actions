@@ -23,10 +23,10 @@ jobs:
         with:
           java-version: 17
           distribution: 'corretto'
+      - name: Grant execute permission for Maven Wrapper
+        run: chmod +x ./mvnw
       - name: Compile project
-        run: |
-          chmod +x ./mvnw
-          ./mvnw clean compile
+        run: ./mvnw clean compile
       # cd spring-with-github-actions
   unit-tests:
     runs-on: ubuntu-latest
@@ -41,10 +41,10 @@ jobs:
         with:
           java-version: 17
           distribution: 'corretto'
+      - name: Grant execute permission for Maven Wrapper
+        run: chmod +x ./mvnw
       - name: Running Unit Test
-        run: |
-          chmod +x ./mvnw
-          ./mvnw clean test
+        run: ./mvnw clean test
       # cd spring-with-github-actions
 
   build:
@@ -62,9 +62,7 @@ jobs:
           java-version: 17
           distribution: 'corretto'
       - name: Build Project
-        run: |
-          chmod +x ./mvnw
-          ./mvnw clean package
+        run: ./mvnw clean package
       # cd spring-with-github-actions
 
   
@@ -85,9 +83,7 @@ jobs:
           distribution: 'corretto'
       - name: Extract Project Version
         id: extract_version
-        run: |
-          chmod +x ./mvnw
-          echo "VERSION=$(./mvnw -q -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(./mvnw -q -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_OUTPUT
       # cd spring-with-github-actions
       - name: Login to Docker Hub
         uses: docker/login-action@v3
