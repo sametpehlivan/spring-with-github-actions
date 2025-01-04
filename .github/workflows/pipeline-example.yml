@@ -96,9 +96,11 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/customer-service:${{ steps.extract_version.outputs.VERSION }},${{ secrets.DOCKERHUB_USERNAME }}/customer-service:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/customer-service:${{ steps.extract_version.outputs.VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/customer-service:latest
           build-args: |
-            APP_VERSION= ${{ steps.extract_version.outputs.VERSION }}
+            APP_VERSION=${{ steps.extract_version.outputs.VERSION }}
             
       
 

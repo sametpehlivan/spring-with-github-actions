@@ -1,19 +1,30 @@
-## Build
-FROM maven:3.8.7-openjdk-18 AS BUILD
+## Build Stage
+FROM maven:3.8.7-openjdk-18 AS build
 WORKDIR /build
-COPY pom.xml .
+
+# Copy Maven configuration and fetch dependencies
+COPY pom.xml ./
 RUN mvn dependency:go-offline
+
+# Copy source code and build the application
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-## Runtime
+
+## Runtime Stage
 FROM amazoncorretto:17
+WORKDIR /app
+
+# Build arguments
 ARG APP_VERSION=1.0.0
 ARG APP_DATABASE=customers
 ARG APP_MONGO_HOST=mongodb
 ARG APP_MONGO_PORT=27017
-WORKDIR /app
-COPY --from=build /build/target/github-actions-*.jar /app/
+
+# Copy the built JAR from the build stage
+COPY --from=build /build/target/github-actions-*.jar /app/app.jar
+
+# Expose the application port
 EXPOSE 8080
 
 ENV MONGO_USERNAME=missing_user_name
