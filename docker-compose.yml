@@ -38,7 +38,7 @@ services:
 
   customer-api:
     container_name: customer-service_container
-    image: customer-service/customer-service:1.0.0
+    image: sametpehlivan/customer-service:1.0.0
     ports:
       - $CUSTOMER_SERVICE_EXPOSE_PORT:8080
     environment:
