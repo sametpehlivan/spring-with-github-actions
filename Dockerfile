@@ -41,5 +41,5 @@ CMD java -Dspring.data.mongodb.username=${MONGO_USERNAME} \
               -Dspring.data.mongodb.port=${MONGO_PORT} \
               -Dspring.data.mongodb.database=${MONGO_DATABASE} \
               -Dspring.data.mongodb.authentication-database=${MONGO_AUTH_DATABASE} \
-              -jar  github-actions-${JAR_VERSION}.jar
+              -jar  app.jar
 ## docker build -t customer-service/customer-service:1.0.0 -f ./Dockerfile .
